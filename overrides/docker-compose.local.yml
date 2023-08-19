@@ -15,8 +15,8 @@ services:
       - terarium-db-port=${TERRARIUM_DB_PORT:-5432}
       - data-service-host=${DATA_SERVICE_HOST:-data-service}
       - data-service-port=${DATA_SERVICE_PORT:-8000}
-      - model-service-url=${MODEL_SERVICE_HOST:-https://model-service.staging.terarium.ai}
-      - simulation-service-url=${SIM_SERVICE_URL:-https://simulation-service.staging.terarium.ai}
+      - model-service-url=${MODEL_SERVICE_URL:-http://model-service:3000}
+      - simulation-service-url=${SIM_SERVICE_URL:-http://simulation-service:8080}
   hmi-client:
     image: ${HMI_CLIENT_IMG:-hmi-client-local}:${HMI_CLIENT_VERSION:-latest}
     build:
@@ -115,11 +115,9 @@ services:
     ports:
       - ${JUPYTER_PORT:-8889}:8888
     environment:
-      - DATA_SERVICE_URL=http://data-service:8000
-      - SIMULATION_SCHEDULER_URL=http://simulation-service:8080
-      - DEBUG=1
-      - JUPYTER_SERVER=http://jupyter:8888
-      - JUPYTER_TOKEN=89f73481102c46c0bc13b2998f9a4fce
+      DATA_SERVICE_URL: ${TDS_URL:-http://data-service:8000}
+      SIMULATION_SCHEDULER_URL: ${SIM_SERVICE_URL:-http://simulation-service:8080}
+      JUPYTER_SERVER: ${JUPYTER_SERVER:-http://jupyter:8888}
     env_file:
       - .openai.env
   terarium-db:
