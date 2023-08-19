@@ -17,6 +17,7 @@ services:
       - data-service-port=${DATA_SERVICE_PORT:-8000}
       - model-service-url=${MODEL_SERVICE_URL:-http://model-service:3000}
       - simulation-service-url=${JULIA_SERVICE_URL:-http://simulation-service:8080}
+      - pyciemss-api-url=${PYCIEMSS_API_URL:-http://pyciemss-api:8010}
   hmi-client:
     image: ${HMI_CLIENT_IMG:-hmi-client-local}:${HMI_CLIENT_VERSION:-latest}
     build:
@@ -188,7 +189,7 @@ services:
     depends_on:
       redis:
         condition: service_healthy
-      api:
+      pyciemss_api:
         condition: service_started
 volumes:
   minio-data:
