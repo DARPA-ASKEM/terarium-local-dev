@@ -2,7 +2,7 @@ version: '3'
 
 services:
   hmi-server:
-    image: hmi-server-local:${HMI_SERVER_VERSION:-latest}
+    image: ${HMI_SERVER_IMAGE:-hmi-server-local}:${HMI_SERVER_VERSION:-latest}
     build:
       context: ${TERARIUM_DIRECTORY:-.}
       dockerfile: packages/services/hmi-server/docker/Dockerfile.dev
@@ -16,7 +16,7 @@ services:
       - data-service-host=${DATA_SERVICE_HOST:-data-service}
       - data-service-port=${DATA_SERVICE_PORT:-8000}
       - model-service-url=${MODEL_SERVICE_HOST:-https://model-service.staging.terarium.ai}
-      - simulation-service-url=${SIMULATION_SERVICE_URL:-https://simulation-service.staging.terarium.ai}
+      - simulation-service-url=${SIM_SERVICE_URL:-https://simulation-service.staging.terarium.ai}
   hmi-client:
     image: hmi-client-local:${HMI_CLIENT_VERSION:-latest}
     build:
@@ -101,13 +101,13 @@ services:
     depends_on:
       - terarium-db
   simulation-service:
-    image: ghcr.io/darpa-askem/simulation-service:${SIMULATION_SERVICE_VERSION:-latest}
+    image: ${JULIA_SIM_IMG:-ghcr.io/darpa-askem/simulation-service}:${JULIA_SERVICE_VERSION:-latest}
     ports:
-      - ${SIMULATION_SERVICE_PORT:-3030}:8080
+      - ${JULIA_SERVICE_PORT:-3030}:8080
     environment:
       - SIMSERVICE_TDS_URL=${TDS_URL:-http://data-service:8000}
   model-service:
-    image: ghcr.io/darpa-askem/model-service:${MODEL_SERVICE_VERSION:-latest}
+    image: ${MODEL_SERVICE_IMG:-ghcr.io/darpa-askem/model-service}:${MODEL_SERVICE_VERSION:-latest}
     ports:
       - ${MODEL_SERVICE_PORT:-3010}:8888
   jupyter:
