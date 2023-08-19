@@ -16,7 +16,7 @@ services:
       - data-service-host=${DATA_SERVICE_HOST:-data-service}
       - data-service-port=${DATA_SERVICE_PORT:-8000}
       - model-service-url=${MODEL_SERVICE_URL:-http://model-service:3000}
-      - simulation-service-url=${SIM_SERVICE_URL:-http://simulation-service:8080}
+      - simulation-service-url=${JULIA_SERVICE_URL:-http://simulation-service:8080}
   hmi-client:
     image: ${HMI_CLIENT_IMG:-hmi-client-local}:${HMI_CLIENT_VERSION:-latest}
     build:
@@ -116,7 +116,7 @@ services:
       - ${JUPYTER_PORT:-8889}:8888
     environment:
       DATA_SERVICE_URL: ${TDS_URL:-http://data-service:8000}
-      SIMULATION_SCHEDULER_URL: ${SIM_SERVICE_URL:-http://simulation-service:8080}
+      SIMULATION_SCHEDULER_URL: ${JULIA_SERVICE_URL:-http://simulation-service:8080}
       JUPYTER_SERVER: ${JUPYTER_SERVER:-http://jupyter:8888}
     env_file:
       - .openai.env
@@ -178,8 +178,6 @@ services:
     ports:
       - ${RABBITMQ_PORT:-5672}:5672
       - ${RABBITMQ_UI_PORT:-15672}:15672
-    networks:
-      - pyciemss
   rqworker:
     container_name: pyciemss-worker
     build:
