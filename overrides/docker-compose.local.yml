@@ -18,7 +18,7 @@ services:
       - model-service-url=${MODEL_SERVICE_HOST:-https://model-service.staging.terarium.ai}
       - simulation-service-url=${SIM_SERVICE_URL:-https://simulation-service.staging.terarium.ai}
   hmi-client:
-    image: hmi-client-local:${HMI_CLIENT_VERSION:-latest}
+    image: ${HMI_CLIENT_IMG:-hmi-client-local}:${HMI_CLIENT_VERSION:-latest}
     build:
       context: ${TERARIUM_DIRECTORY:-.}/packages/client
       dockerfile: hmi-client/docker/Dockerfile.dev
@@ -32,7 +32,7 @@ services:
     ports:
       - ${HMI_CLIENT_PORT:-3020}:${HMI_CLIENT_SERVICE_PORT:-8080}
   data-service-migrations:
-    image: terarium-data-service-migrations:${DATA_SERVICE_VERSION:-latest}
+    image: ${DATA_SERVICE_MIGRATIONS_IMG:-terarium-data-service-migrations}:${DATA_SERVICE_VERSION:-latest}
     build:
       context: ${TDS_DIRECTORY:-.}
       dockerfile: docker/Dockerfile.migrations
@@ -45,7 +45,7 @@ services:
       terarium-db:
         condition: service_healthy
   data-service:
-    image: terarium-data-service:${DATA_SERVICE_VERSION:-latest}
+    image: ${DATA_SERVICE_IMG:-terarium-data-service}:${DATA_SERVICE_VERSION:-latest}
     build:
       context: ${TDS_DIRECTORY:-.}
       dockerfile: docker/Dockerfile
@@ -84,7 +84,7 @@ services:
       - ${MINIO_PORT:-9000}:9000
       - ${MINIO_UI_PORT:-9001}:9001
   neo4j:
-    image: ghcr.io/darpa-askem/data-service-graphdb:${NEO4J_VERSION:-5.3.0.3}
+    image: ${NEO4J_IMG:-ghcr.io/darpa-askem/data-service-graphdb}:${NEO4J_VERSION:-5.3.0.3}
     expose:
       - 7474
       - 7687
@@ -111,7 +111,7 @@ services:
     ports:
       - ${MODEL_SERVICE_PORT:-3010}:8888
   jupyter:
-    image: ghcr.io/darpa-askem/jupyter-llm:${JUPYTER_SERVICE_VERSION:-latest}
+    image: ${JUPYTER_LLM_IMG:-ghcr.io/darpa-askem/jupyter-llm}:${JUPYTER_SERVICE_VERSION:-latest}
     ports:
       - ${JUPYTER_PORT:-8889}:8888
     environment:
@@ -123,7 +123,7 @@ services:
     env_file:
       - .openai.env
   terarium-db:
-    image: postgres:15.1
+    image: ${TERARIUM_DB_IMG-:postgres}:${TERARIUM_DB_VERSION:-15.1}
     expose:
       - ${TERRARIUM_DB_PORT:-5432}
     environment:
