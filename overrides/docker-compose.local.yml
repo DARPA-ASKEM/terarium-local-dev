@@ -1,9 +1,5 @@
 version: '3'
 
-include:
-  - components/hmi.compose-include.yml
-  - components/tds.yml
-
 services:
   hmi-server:
     image: hmi-server-local:${HMI_SERVER_VERSION:-latest}
