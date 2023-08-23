@@ -1,12 +1,6 @@
-from yaml import safe_load, dump, Dumper
 from pathlib import Path
 from ruamel.yaml import YAML
 from build import get_base_yaml
-
-
-class AskemDumper(Dumper):
-    def increase_indent(self, flow=False, indentless=False):
-        return super(AskemDumper, self).increase_indent(flow, False)
 
 
 def extract_components(file_path: str, component_dir: str):
