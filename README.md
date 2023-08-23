@@ -43,6 +43,7 @@ If you want to build a service from your local repository you can achieve this b
 absolute path to the repository via the build prompt or by adding `build_paths.json` file with the
 service listed. 
 
+Example `build_paths.json`:
     {
         "data-service": "/path/to/data-service-repo",
         "hmi-client": "/path/to/Terarium",
