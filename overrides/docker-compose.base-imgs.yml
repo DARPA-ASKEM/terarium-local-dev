@@ -31,8 +31,8 @@ services:
       - terarium-db-port=${TERRARIUM_DB_PORT:-5432}
       - data-service-host=${DATA_SERVICE_HOST:-data-service}
       - data-service-port=${DATA_SERVICE_PORT:-8000}
-      - model-service-url=${MODEL_SERVICE_HOST:-https://model-service.staging.terarium.ai}
-      - simulation-service-url=${MODEL_SERVICE_HOST:-https://simulation-service.staging.terarium.ai}
+      - model-service-url=${MODEL_SERVICE_URL:-https://model-service.staging.terarium.ai}
+      - simulation-service-url=${JULIA_SERVICE_URL:-https://simulation-service.staging.terarium.ai}
     depends_on:
       terarium-db:
         condition: service_healthy
