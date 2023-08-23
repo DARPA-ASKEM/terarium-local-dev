@@ -12,5 +12,3 @@ rqworker:
   depends_on:
     redis:
       condition: service_healthy
-    pyciemss_api:
-      condition: service_started
