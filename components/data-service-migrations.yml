@@ -4,8 +4,26 @@ data-service-migrations:
   build:
     context: ${TDS_DIRECTORY}
     dockerfile: docker/Dockerfile.migrations
-  env_file:
-    - tds.local.env
+  environment:
+    DATASET_STORAGE_BASE_URL: ${DATASET_STORAGE_BASE_URL:-s3://datasets/}
+    STORAGE_HOST: ${STORAGE_HOST:-http://minio:9000}
+    S3_BUCKET: ${S3_BUCKET:-askem}
+    S3_DATASET_PATH: ${S3_DATASET_PATH:-datasets}
+    S3_RESULT_PATH: ${S3_RESULT_PATH:-simulations}
+    SQL_URL: ${TERRARIUM_DB_HOST:-terarium-db}
+    SQL_PORT: ${TERRARIUM_DB_PORT:-5432}
+    SQL_USER: ${TERRARIUM_DB_USER:-terarium}
+    SQL_PASSWORD: ${TERRARIUM_DB_PASSWORD:-terarium123}
+    SQL_DB: ${SQL_DB:-askem}
+    NEO4J_ENABLED: ${NEO4J_ENABLED:-false}
+    NEO4J_DRIVER: neo4j://neo4j:7687
+    AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-miniouser}
+    AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-miniopass}
+    ES_INDEX_PREFIX: ${ES_INDEX_PREFIX:-tds_}
+    ES_URL: ${ES_URL:-http://elasticsearch:9200}
+    ES_USERNAME: ${ES_USERNAME:-tds}
+    ES_PASSWORD: ${ES_PASSWORD:-tdsElasticPass}
+    SEED_DATA: ${SEED_DATA:-false}
   entrypoint: /run_migrations.sh
   depends_on:
     data-service-elasticsearch:
