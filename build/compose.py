@@ -18,8 +18,8 @@ class AskemComposer:
         "services": {},
         "volumes": {
             "minio-data": {"driver": "local"},
-            "terarium-db-storage": {"driver": "local"}
-        }
+            "terarium-db-storage": {"driver": "local"},
+        },
     }
 
     def __init__(self, **kwargs):
@@ -44,7 +44,9 @@ class AskemComposer:
                     if "~" in build_path:
                         build_path = build_path.replace("~", os.environ["HOME"])
                     if os.path.exists(Path(build_path)) is False:
-                        raise AskemComposerException(f"Path {build_path} does not exist")
+                        raise AskemComposerException(
+                            f"Path {build_path} does not exist"
+                        )
                     build_key = self.config[key]["build_path"]
                     image_to_use = f"{key}-local"
                     self.env_vars[build_key] = build_path
@@ -79,7 +81,9 @@ class AskemComposer:
         for service in self.config:
             if service in self._compose_yaml["services"]:
                 continue
-            service_compose_file = self._component_path.format(working_dir=self.working_dir, service=service)
+            service_compose_file = self._component_path.format(
+                working_dir=self.working_dir, service=service
+            )
             yaml_file = self._load_yaml(service_compose_file)
             if service not in self.build_manifest and "build" in yaml_file[service]:
                 del yaml_file[service]["build"]
@@ -110,7 +114,9 @@ class AskemComposer:
         for d in dependencies:
             if d in self._compose_yaml["services"]:
                 continue
-            dep_yaml = self._component_path.format(working_dir=self.working_dir, service=d)
+            dep_yaml = self._component_path.format(
+                working_dir=self.working_dir, service=d
+            )
             dep_yaml_obj = self._load_yaml(dep_yaml)
             self._compose_yaml["services"][d] = dep_yaml_obj[d]
             if "depends_on" in dep_yaml_obj[d]:
