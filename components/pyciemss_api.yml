@@ -19,3 +19,5 @@ pyciemss_api:
       condition: service_healthy
     rabbitmq:
       condition: service_healthy
+    rqworker:
+      condition: service_started
