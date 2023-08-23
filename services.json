@@ -115,7 +115,10 @@
   },
   "minio": {
     "buildable": false,
+    "key": "MINIO",
     "env": {
+      "MINIO_IMG": "minio/minio",
+      "MINIO_VERSION": "RELEASE.2021-07-27T02-40-15Z",
       "MINIO_ROOT_USER": "miniouser",
       "MINIO_ROOT_PASSWORD": "miniopass",
       "MINIO_PORT": 9000,
@@ -124,9 +127,10 @@
   },
   "neo4j": {
     "buildable": false,
+    "key": "NEO4J",
     "env": {
       "NEO4J_IMG": "ghcr.io/darpa-askem/data-service-graphdb",
-      "NEO4J_VERSION": "latest",
+      "NEO4J_VERSION": "5.3.0.3",
       "TERRARIUM_DB_HOST": "terarium-db",
       "TERRARIUM_DB_USER": "terarium",
       "TERRARIUM_DB_PASSWORD": "terarium123",
