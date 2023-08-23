@@ -1,4 +1,5 @@
 hmi-server:
+  hostname: hmi-server
   image: ${HMI_SERVER_IMAGE:-hmi-server-local}:${HMI_SERVER_VERSION:-latest}
   build:
     context: ${TERARIUM_DIRECTORY}
