@@ -37,7 +37,7 @@ setting up every pertinent environment variable for every enabled service.
 The docker compose file is built using the yaml files in the `components` directory.  You can review these files
 to understand the ENV values and what they map to in the service definition.
 
-## Building a local service
+## Building a Local Service
 If you want to build a service from your local repository you can achieve this by running the builder 
 (`python builder.py`) and select `y` when prompted for a local build.  You will need to supply the 
 absolute path to the repository via the build prompt or by adding `build_paths.json` file with the
