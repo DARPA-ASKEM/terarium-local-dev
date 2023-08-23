@@ -14,4 +14,5 @@ neo4j:
     - PG_PASSWORD=${TERRARIUM_DB_PASSWORD:-terarium123}
     - PG_DB=${DATA_SERVICE_DB:-askem}
   depends_on:
-    - terarium-db
+    terarium-db:
+      condition: service_healthy
