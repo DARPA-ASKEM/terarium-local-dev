@@ -13,7 +13,10 @@ component_dir = f"{cwd}/components"
 if __name__ == "__main__":
     # Initialize parser
     parser = argparse.ArgumentParser()
-    parser.add_argument("-e", "--env", help="Custom env file to write out.", default="test.env")
+    parser.add_argument("-e", "--env", help="Custom env file to write out.", default=".env")
+    parser.add_argument(
+        "-d", "--defaults", help="Flag that sets up the build to use default values.", default=False
+    )
     parser.add_argument(
         "-l", "--local", help="Flag that sets up the build as full local install."
     )
@@ -40,6 +43,7 @@ if __name__ == "__main__":
                 compose_file=yaml_file,
                 env_file=f"{cwd}/{args.env}",
                 working_dir=cwd,
+                use_defaults=args.defaults == "true"
             )
         try:
             os.system("clear")
