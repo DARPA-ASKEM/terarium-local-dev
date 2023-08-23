@@ -1,0 +1,12 @@
+rabbitmq:
+  container_name: rabbitmq
+  hostname: rabbitmq
+  image: rabbitmq:3
+  healthcheck:
+    test: [CMD, rabbitmqctl, status]
+    interval: 10s
+    timeout: 5s
+    retries: 5
+  ports:
+    - ${RABBITMQ_PORT:-5672}:5672
+    - ${RABBITMQ_UI_PORT:-15672}:15672

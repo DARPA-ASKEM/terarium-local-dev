@@ -1,0 +1,78 @@
+version: '3'
+services:
+  hmi-client:
+    container_name: hmi-local-client
+    hostname: hmi-client
+    image: ${HMI_CLIENT_IMG:-ghcr.io/darpa-askem/hmi-client}:${HMI_CLIENT_VERSION:-latest}
+    environment:
+      - BYPASS_KEYCLOAK=${HMI_CLIENT_BYPASS_KEYCLOAK:-true}
+      - VITE_BYPASS_KEYCLOAK=${HMI_CLIENT_BYPASS_KEYCLOAK:-true}
+      - hmi_server_host=${HMI_CLIENT_HMI_SERVER_HOST:-hmi-server}
+      - hmi_server_port=${HMI_SERVER_PORT:-3000}
+      - VITE_JUPYTER_TOKEN=89f73481102c46c0bc13b2998f9a4fce
+      - COMPOSED=true
+    ports:
+      - ${HMI_CLIENT_PORT:-3020}:${HMI_CLIENT_SERVICE_PORT:-8080}
+    depends_on:
+      hmi-server:
+        condition: service_started
+  hmi-server:
+    hostname: hmi-server
+    container_name: hmi-local-server
+    image: ${HMI_SERVER_IMG:-ghcr.io/darpa-askem/hmi-server}:${HMI_SERVER_VERSION:-latest}
+    ports:
+      - ${HMI_SERVER_PORT:-3000}:3000
+    environment:
+      - QUARKUS_OIDC_ENABLED=${QUARKUS_OIDC_ENABLED:-false}
+      - QUARKUS_KEYCLOAK_POLICY_ENFORCER_ENABLE=${QUARKUS_KEYCLOAK_POLICY_ENFORCER_ENABLE:-false}
+      - QUARKUS_SECURITY_AUTH_ENABLED_IN_DEV_MODE=${QUARKUS_SECURITY_AUTH_ENABLED_IN_DEV_MODE:-false}
+      - QUARKUS_HTTP_HOST=${QUARKUS_HTTP_HOST:-0.0.0.0}
+      - terarium-db-host=${TERRARIUM_DB_HOST:-terarium-db}
+      - terarium-db-port=${TERRARIUM_DB_PORT:-5432}
+      - data-service-host=${DATA_SERVICE_HOST:-data-service}
+      - data-service-port=${DATA_SERVICE_PORT:-8000}
+      - model-service-url=${MODEL_SERVICE_URL:-https://model-service.staging.terarium.ai}
+      - simulation-service-url=${JULIA_SERVICE_URL:-https://simulation-service.staging.terarium.ai}
+    depends_on:
+      terarium-db:
+        condition: service_healthy
+      data-service:
+        condition: service_started
+  terarium-db:
+    image: ${TERARIUM_DB_IMG-:postgres}:${TERARIUM_DB_VERSION:-15.1}
+    expose:
+      - ${TERRARIUM_DB_PORT:-5432}
+    environment:
+      POSTGRES_USER: ${TERRARIUM_DB_USER:-terarium}
+      POSTGRES_PASSWORD: ${TERRARIUM_DB_PASSWORD:-terarium123}
+      POSTGRES_DB: ${TERRARIUM_DB_DB:-terarium}
+    volumes:
+      - terarium-db-storage:/var/lib/postgresql/data
+      - ./db/:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${TERRARIUM_DB_USER:-terarium} -d ${TERRARIUM_DB_DB:-terarium}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  data-service-migrations:
+    container_name: data-service-migrations-local
+    image: ${DATA_SERVICE_MIGRATIONS_IMG:-ghcr.io/darpa-askem/data-service-migrations}:${DATA_SERVICE_VERSION:-latest}
+    entrypoint: /run_migrations.sh
+    env_file:
+      - tds.local.env
+    depends_on:
+      terarium-db:
+        condition: service_healthy
+  data-service:
+    container_name: data-service-local
+    image: ${DATA_SERVICE_IMG:-ghcr.io/darpa-askem/data-service}:${DATA_SERVICE_VERSION:-latest}
+    env_file:
+      - tds.local.env
+    depends_on:
+      data-service-migrations:
+        condition: service_completed_successfully
+    ports:
+      - ${DATA_SERVICE_PORT:-8000}:8000
+volumes:
+  terarium-db-storage:
+    driver: local

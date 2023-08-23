@@ -1,0 +1,16 @@
+terarium-db:
+  image: ${TERARIUM_DB_IMG:-postgres}:${TERARIUM_DB_VERSION:-15.1}
+  expose:
+    - ${TERRARIUM_DB_PORT:-5432}
+  environment:
+    POSTGRES_USER: ${TERRARIUM_DB_USER:-terarium}
+    POSTGRES_PASSWORD: ${TERRARIUM_DB_PASSWORD:-terarium123}
+    POSTGRES_DB: ${TERRARIUM_DB_DB:-terarium}
+  volumes:
+    - terarium-db-storage:/var/lib/postgresql/data
+    - ./db/:/docker-entrypoint-initdb.d
+  healthcheck:
+    test: [CMD-SHELL, 'pg_isready -U ${TERRARIUM_DB_USER:-terarium} -d ${TERRARIUM_DB_DB:-terarium}']
+    interval: 10s
+    timeout: 5s
+    retries: 5

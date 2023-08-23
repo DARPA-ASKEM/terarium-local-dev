@@ -1,0 +1,5 @@
+model-service:
+  image: 
+    ${MODEL_SERVICE_IMG:-ghcr.io/darpa-askem/model-service}:${MODEL_SERVICE_VERSION:-latest}
+  ports:
+    - ${MODEL_SERVICE_PORT:-3010}:8888

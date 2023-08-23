@@ -1,0 +1,14 @@
+rqworker:
+  container_name: pyciemss-worker
+  build:
+    context: ${PYCIEMSS_SIM_DIRECTORY}
+    dockerfile: docker/Dockerfile.worker
+  environment:
+    TDS_URL: ${DATA_SERVICE_URL:-http://data-service:8099}
+    REDIS_HOST: ${REDIS_HOST:-redis}
+    REDIS_PORT: ${REDIS_PORT:-6379}
+    RABBITMQ_HOST: ${RABBITMQ_HOST:-rabbitmq.pyciemss}
+    RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
+  depends_on:
+    redis:
+      condition: service_healthy

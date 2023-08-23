@@ -1,0 +1,11 @@
+jupyter:
+  image: 
+    ${JUPYTER_LLM_IMG:-ghcr.io/darpa-askem/jupyter-llm}:${JUPYTER_LLM_VERSION:-latest}
+  ports:
+    - ${JUPYTER_PORT:-8889}:8888
+  environment:
+    DATA_SERVICE_URL: ${DATA_SERVICE_URL:-http://data-service:8099}
+    SIMULATION_SCHEDULER_URL: ${JULIA_SERVICE_URL:-http://simulation-service:8080}
+    JUPYTER_SERVER: ${JUPYTER_SERVER:-http://jupyter:8888}
+  env_file:
+    - .openai.env

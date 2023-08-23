@@ -1,0 +1,18 @@
+neo4j:
+  image: ${NEO4J_IMG:-ghcr.io/darpa-askem/data-service-graphdb}:${NEO4J_VERSION:-5.3.0.3}
+  expose:
+    - 7474
+    - 7687
+  environment:
+    - NEO4J_PLUGINS=["apoc"]
+    - apoc.import.file.enabled=true
+    - NEO4J_AUTH=neo4j/password
+    - NEO4J_dbms_memory_pagecache_size=512M
+    - PG_HOST=${TERRARIUM_DB_HOST:-terarium-db}
+    - PG_PORT=${TERRARIUM_DB_PORT:-5432}
+    - PG_USER=${TERRARIUM_DB_USER:-terarium}
+    - PG_PASSWORD=${TERRARIUM_DB_PASSWORD:-terarium123}
+    - PG_DB=${DATA_SERVICE_DB:-askem}
+  depends_on:
+    terarium-db:
+      condition: service_healthy
