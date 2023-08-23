@@ -36,7 +36,7 @@ class AskemComposer:
                 service_key = self.config[key]["key"]
                 image_key = f"{service_key}_IMG"
                 version_key = f"{service_key}_VERSION"
-                version = self.config[key]["build_env"][version_key]
+                version = self.config[key]["env"][version_key]
                 buildable = self.config[key]["buildable"]
                 local_build = input("Local build? (y/N)") if buildable else False
                 if local_build.lower() in ["y", "yes"]:
