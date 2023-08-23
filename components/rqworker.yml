@@ -3,8 +3,6 @@ rqworker:
   build:
     context: ${PYCIEMSS_SIM_DIRECTORY}
     dockerfile: docker/Dockerfile.worker
-  env_file:
-    - sim.local.env
   environment:
     TDS_URL: ${DATA_SERVICE_URL:-http://data-service:8099}
     REDIS_HOST: ${REDIS_HOST:-redis}
