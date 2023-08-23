@@ -33,7 +33,7 @@
     "env": {
       "HMI_CLIENT_IMG": "ghcr.io/darpa-askem/hmi-client",
       "HMI_CLIENT_VERSION": "latest",
-      "HMI_CLIENT_PORT": 3020,
+      "HMI_CLIENT_PORT": 8078,
       "HMI_CLIENT_SERVICE_PORT": 8080,
       "HMI_SERVER_PORT": 3000,
       "HMI_CLIENT_HMI_SERVER_HOST": "hmi-server",
@@ -54,7 +54,11 @@
       "DATA_SERVICE_HOST": "data-service",
       "MODEL_SERVICE_HOST": "model-service",
       "JULIA_SERVICE_URL": "http://simulation-service:8180",
-      "PYCIEMSS_API_URL": "http://pyciemss-api:8010"
+      "PYCIEMSS_API_URL": "http://pyciemss-api:8010",
+      "QUARKUS_HTTP_HOST": "0.0.0.0",
+      "QUARKUS_OIDC_ENABLED": false,
+      "QUARKUS_KEYCLOAK_POLICY_ENFORCER_ENABLE": false,
+      "QUARKUS_SECURITY_AUTH_ENABLED_IN_DEV_MODE": false
     }
   },
   "jupyter": {
@@ -97,6 +101,37 @@
       "RABBITMQ_PORT": 5672,
       "RABBITMQ_USERNAME": "guest",
       "RABBITMQ_PASSWORD": "guest"
+    }
+  },
+  "model-service": {
+    "buildable": false,
+    "build_path": "MODEL_SERVICE_DIRECTORY",
+    "key": "MODEL_SERVICE",
+    "env": {
+      "MODEL_SERVICE_IMG": "ghcr.io/darpa-askem/model-service",
+      "MODEL_SERVICE_VERSION": "latest",
+      "MODEL_SERVICE_PORT": 3010
+    }
+  },
+  "minio": {
+    "buildable": false,
+    "env": {
+      "MINIO_ROOT_USER": "miniouser",
+      "MINIO_ROOT_PASSWORD": "miniopass",
+      "MINIO_PORT": 9000,
+      "MINIO_UI_PORT": 9001
+    }
+  },
+  "neo4j": {
+    "buildable": false,
+    "env": {
+      "NEO4J_IMG": "ghcr.io/darpa-askem/data-service-graphdb",
+      "NEO4J_VERSION": "latest",
+      "TERRARIUM_DB_HOST": "terarium-db",
+      "TERRARIUM_DB_USER": "terarium",
+      "TERRARIUM_DB_PASSWORD": "terarium123",
+      "DATA_SERVICE_DB": "askem",
+      "TERRARIUM_DB_PORT": 5432
     }
   }
 }
