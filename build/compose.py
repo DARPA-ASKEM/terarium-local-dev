@@ -29,19 +29,22 @@ class AskemComposer:
         for k in kwargs:
             self.__setattr__(k, kwargs[k])
 
-    def setup(self):
+    def setup(self) -> None:
+        """
+        Method sets up the compose build.
+        """
         for key in self.config:
             os.system("clear")
-            enable_service = input(f"Enable local service {key}? (y/N)")
+            enable_service = input(f"Enable local service {key}? (y/N) ")
             if enable_service.lower() in ["y", "yes"]:
                 service_key = self.config[key]["key"]
                 image_key = f"{service_key}_IMG"
                 version_key = f"{service_key}_VERSION"
                 version = self.config[key]["env"][version_key]
                 buildable = self.config[key]["buildable"]
-                local_build = input("Local build? (y/N)") if buildable else False
+                local_build = input("Local build? (y/N) ") if buildable else False
                 if local_build and local_build.lower() in ["y", "yes"]:
-                    build_path = input("Path to repository?")
+                    build_path = input("Path to repository? ")
                     if "~" in build_path:
                         build_path = build_path.replace("~", os.environ["HOME"])
                     if os.path.exists(Path(build_path)) is False:
@@ -55,12 +58,12 @@ class AskemComposer:
                     self._build_manifest.append(key)
                 else:
                     default_image = self.config[key]["env"][image_key]
-                    use_default = input(f"Use default image [{default_image}]? (y/N)")
+                    use_default = input(f"Use default image [{default_image}]? (y/N) ")
                     if use_default.lower() in ["y", "yes"]:
                         image_to_use = default_image
                     else:
-                        image_to_use = input(f"Image to use for {key}?")
-                        image_version = input(f"Image version? Defaults to latest")
+                        image_to_use = input(f"Image to use for {key}? ")
+                        image_version = input(f"Image version? Defaults to latest ")
                         if image_version:
                             version = image_version
                 self._env_vars[version_key] = version
@@ -79,6 +82,9 @@ class AskemComposer:
                 env_file.write(f"{k}={value}\n")
 
     def write_compose_file(self) -> None:
+        """
+        Method writes out the compose file.
+        """
         compose_yaml = get_base_yaml()
 
         for service in self.config:
@@ -137,8 +143,8 @@ class AskemComposer:
                 continue
             item_value = service_items[item]
             if self.use_defaults is False:
-                item_value = input(f"Use default ({item_value}) for {item}? (Y/n)")
+                item_value = input(f"Use default ({item_value}) for {item}? (Y/n) ")
                 if item_value.lower() in ["n", "no"]:
-                    custom_value = input(f"Enter custom value for {item}:")
+                    custom_value = input(f"Enter custom value for {item}: ")
                     item_value = custom_value
             self._env_vars[item] = item_value
