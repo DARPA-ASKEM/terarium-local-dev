@@ -12,6 +12,9 @@ class AskemComposerException(Exception):
 
 
 class AskemComposer:
+    _build_manifest = []
+    _skip_services = []
+    _env_vars = {}
     _component_path = "{working_dir}/components/{service}.yml"
     _compose_yaml = {
         "version": "3",
@@ -23,8 +26,6 @@ class AskemComposer:
     }
 
     def __init__(self, **kwargs):
-        self.build_manifest = []
-        self.env_vars = {}
         for k in kwargs:
             self.__setattr__(k, kwargs[k])
 
@@ -39,7 +40,7 @@ class AskemComposer:
                 version = self.config[key]["env"][version_key]
                 buildable = self.config[key]["buildable"]
                 local_build = input("Local build? (y/N)") if buildable else False
-                if local_build.lower() in ["y", "yes"]:
+                if local_build and local_build.lower() in ["y", "yes"]:
                     build_path = input("Path to repository?")
                     if "~" in build_path:
                         build_path = build_path.replace("~", os.environ["HOME"])
@@ -49,9 +50,9 @@ class AskemComposer:
                         )
                     build_key = self.config[key]["build_path"]
                     image_to_use = f"{key}-local"
-                    self.env_vars[build_key] = build_path
+                    self._env_vars[build_key] = build_path
                     version = "latest"
-                    self.build_manifest.append(key)
+                    self._build_manifest.append(key)
                 else:
                     default_image = self.config[key]["env"][image_key]
                     use_default = input(f"Use default image [{default_image}]? (y/N)")
@@ -62,30 +63,32 @@ class AskemComposer:
                         image_version = input(f"Image version? Defaults to latest")
                         if image_version:
                             version = image_version
-                self.env_vars[version_key] = version
-                self.env_vars[image_key] = image_to_use
+                self._env_vars[version_key] = version
+                self._env_vars[image_key] = image_to_use
                 self._process_service_env(service=key)
+            else:
+                self._skip_services.append(key)
 
     def write_env(self) -> None:
         """
         Method writes out the build env file.
         """
         with open(self.env_file, "w") as env_file:
-            for k in self.env_vars:
-                value = self.env_vars[k]
+            for k in self._env_vars:
+                value = self._env_vars[k]
                 env_file.write(f"{k}={value}\n")
 
     def write_compose_file(self) -> None:
         compose_yaml = get_base_yaml()
 
         for service in self.config:
-            if service in self._compose_yaml["services"]:
+            if service in self._compose_yaml["services"] or service in self._skip_services:
                 continue
             service_compose_file = self._component_path.format(
                 working_dir=self.working_dir, service=service
             )
             yaml_file = self._load_yaml(service_compose_file)
-            if service not in self.build_manifest and "build" in yaml_file[service]:
+            if service not in self._build_manifest and "build" in yaml_file[service]:
                 del yaml_file[service]["build"]
             self._compose_yaml["services"][service] = yaml_file[service]
             if "depends_on" in yaml_file[service]:
@@ -130,13 +133,12 @@ class AskemComposer:
         service_items = self.config[service]["env"]
         os.system("clear")
         for item in service_items:
-            if item in self.env_vars:
+            if item in self._env_vars:
                 continue
-            default_value = service_items[item]
-            item_value = input(f"Use default ({default_value}) for {item}? (Y/n)")
-            if item_value.lower() in ["n", "no"]:
-                custom_value = input(f"Enter custom value for {item}:")
-                item_value = custom_value
-            else:
-                item_value = default_value
-            self.env_vars[item] = item_value
+            item_value = service_items[item]
+            if self.use_defaults is False:
+                item_value = input(f"Use default ({item_value}) for {item}? (Y/n)")
+                if item_value.lower() in ["n", "no"]:
+                    custom_value = input(f"Enter custom value for {item}:")
+                    item_value = custom_value
+            self._env_vars[item] = item_value
