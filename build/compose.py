@@ -44,7 +44,10 @@ class AskemComposer:
                 buildable = self.config[key]["buildable"]
                 local_build = input("Local build? (y/N) ") if buildable else False
                 if local_build and local_build.lower() in ["y", "yes"]:
-                    build_path = input("Path to repository? ")
+                    if self.build_paths and key in self.build_paths:
+                        build_path = self.build_paths[key]
+                    else:
+                        build_path = input("Path to repository? ")
                     if "~" in build_path:
                         build_path = build_path.replace("~", os.environ["HOME"])
                     if os.path.exists(Path(build_path)) is False:
