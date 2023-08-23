@@ -1,0 +1,14 @@
+data-service-migrations:
+  image: 
+    ${DATA_SERVICE_MIGRATIONS_IMG:-terarium-data-service-migrations}:${DATA_SERVICE_VERSION:-latest}
+  build:
+    context: ${TDS_DIRECTORY}
+    dockerfile: docker/Dockerfile.migrations
+  env_file:
+    - tds.local.env
+  entrypoint: /run_migrations.sh
+  depends_on:
+    data-service-elasticsearch:
+      condition: service_healthy
+    terarium-db:
+      condition: service_healthy

@@ -1,0 +1,14 @@
+hmi-client:
+  image: ${HMI_CLIENT_IMG:-hmi-client-local}:${HMI_CLIENT_VERSION:-latest}
+  build:
+    context: ${TERARIUM_DIRECTORY}/packages/client
+    dockerfile: hmi-client/docker/Dockerfile.dev
+  environment:
+    - BYPASS_KEYCLOAK=${HMI_CLIENT_BYPASS_KEYCLOAK:-true}
+    - VITE_BYPASS_KEYCLOAK=${HMI_CLIENT_BYPASS_KEYCLOAK:-true}
+    - hmi_server_host=${HMI_CLIENT_HMI_SERVER_HOST:-hmi-server}
+    - hmi_server_port=${HMI_SERVER_PORT:-3000}
+    - VITE_JUPYTER_TOKEN=89f73481102c46c0bc13b2998f9a4fce
+    - COMPOSED=true
+  ports:
+    - ${HMI_CLIENT_PORT:-3020}:${HMI_CLIENT_SERVICE_PORT:-8080}

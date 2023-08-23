@@ -1,0 +1,8 @@
+simulation-service:
+  image: 
+    ${JULIA_SIM_IMG:-ghcr.io/darpa-askem/simulation-service}:${JULIA_SIM_VERSION:-latest}
+  ports:
+    - ${JULIA_SIM_HOST_PORT:-3030}:${SIMSERVICE_PORT:-8180}
+  environment:
+    SIMSERVICE_TDS_URL: ${DATA_SERVICE_URL:-http://data-service:8099}
+    SIMSERVICE_PORT: ${SIMSERVICE_PORT:-8180}

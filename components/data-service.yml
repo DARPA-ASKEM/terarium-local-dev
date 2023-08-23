@@ -1,0 +1,12 @@
+data-service:
+  image: ${DATA_SERVICE_IMG:-terarium-data-service}:${DATA_SERVICE_VERSION:-latest}
+  build:
+    context: ${TDS_DIRECTORY}
+    dockerfile: docker/Dockerfile
+  env_file:
+    - tds.local.env
+  ports:
+    - ${DATA_SERVICE_PORT:-8002}:${DATA_SERVICE_LISTEN_PORT:-8099}
+  depends_on:
+    data-service-migrations:
+      condition: service_completed_successfully

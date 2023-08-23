@@ -1,0 +1,17 @@
+hmi-server:
+  image: ${HMI_SERVER_IMAGE:-hmi-server-local}:${HMI_SERVER_VERSION:-latest}
+  build:
+    context: ${TERARIUM_DIRECTORY}
+    dockerfile: packages/services/hmi-server/docker/Dockerfile.dev
+  environment:
+    - QUARKUS_OIDC_ENABLED=${QUARKUS_OIDC_ENABLED:-false}
+    - QUARKUS_KEYCLOAK_POLICY_ENFORCER_ENABLE=${QUARKUS_KEYCLOAK_POLICY_ENFORCER_ENABLE:-false}
+    - QUARKUS_SECURITY_AUTH_ENABLED_IN_DEV_MODE=${QUARKUS_SECURITY_AUTH_ENABLED_IN_DEV_MODE:-false}
+    - QUARKUS_HTTP_HOST=${QUARKUS_HTTP_HOST:-0.0.0.0}
+    - terarium-db-host=${TERRARIUM_DB_HOST:-terarium-db}
+    - terarium-db-port=${TERRARIUM_DB_PORT:-5432}
+    - data-service-host=${DATA_SERVICE_HOST:-data-service}
+    - data-service-port=${DATA_SERVICE_LISTEN_PORT:-8099}
+    - model-service-url=${MODEL_SERVICE_URL:-http://model-service:3000}
+    - simulation-service-url=${JULIA_SERVICE_URL:-http://simulation-service:8080}
+    - pyciemss-api-url=${PYCIEMSS_API_URL:-http://pyciemss-api:8010}
