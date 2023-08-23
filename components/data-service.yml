@@ -1,4 +1,5 @@
 data-service:
+  hostname: data-service
   image: ${DATA_SERVICE_IMG:-terarium-data-service}:${DATA_SERVICE_VERSION:-latest}
   build:
     context: ${TDS_DIRECTORY}
