@@ -1,6 +1,6 @@
 .idea/
 __pycache__/
-
+build_paths.json
 *.env
 
 # Ignore docker files because they will be built via scripts.
