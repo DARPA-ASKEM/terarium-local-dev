@@ -32,6 +32,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     yaml_file = f"{cwd}/docker-compose.yml"
+    build_paths = None
+    if os.path.isfile(f"{cwd}/build_paths.json"):
+        with open(f"{cwd}/build_paths.json", "r") as bfile:
+            build_paths = json.load(bfile)
+
     if args.extract:
         extract_components(file_path=yaml_file, component_dir=component_dir)
     else:
@@ -43,7 +48,8 @@ if __name__ == "__main__":
                 compose_file=yaml_file,
                 env_file=f"{cwd}/{args.env}",
                 working_dir=cwd,
-                use_defaults=args.defaults == "true"
+                use_defaults=args.defaults == "true",
+                build_paths=build_paths
             )
         try:
             os.system("clear")
