@@ -139,10 +139,13 @@
       "TERRARIUM_DB_PORT": 5432
     }
   },
-  "api-ta1-service": {
-    "buildable": false,
-    "key": "NEO4J",
+  "ta1-api": {
+    "buildable": true,
+    "build_path": "TA1_SERVICE_DIRECTORY",
+    "key": "TA1",
     "env": {
+      "TA1_IMG": "ghcr.io/darpa-askem/ta1-service-api",
+      "TA1_VERSION": "latest",
       "REDIS_HOST": "redis",
       "REDIS_PORT": 6379,
       "DATA_SERVICE_URL": "http://data-service:8099",
