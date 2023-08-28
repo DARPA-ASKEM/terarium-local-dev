@@ -138,5 +138,20 @@
       "DATA_SERVICE_DB": "askem",
       "TERRARIUM_DB_PORT": 5432
     }
+  },
+  "api-ta1-service": {
+    "buildable": false,
+    "key": "NEO4J",
+    "env": {
+      "REDIS_HOST": "redis",
+      "REDIS_PORT": 6379,
+      "DATA_SERVICE_URL": "http://data-service:8099",
+      "SKEMA_RS_URL": "http://skema-rs.staging.terarium.ai",
+      "TA1_UNIFIED_URL": "http://skema-unified.staging.terarium.ai",
+      "MIT_TR_URL": "http://mit-tr.staging.terarium.ai",
+      "TA1_LOG_LEVEL": "INFO",
+      "TA1_API_PORT": 8020,
+      "TA1_LISTEN_PORT": 8201
+    }
   }
 }
