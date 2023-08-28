@@ -1,4 +1,5 @@
 ta1-api:
+  image: ${TA1_IMG:-ghcr.io/darpa-askem/ta1-service-api}
   container_name: api-ta1-service
   build:
     context: ${TA1_SERVICE_DIRECTORY}
