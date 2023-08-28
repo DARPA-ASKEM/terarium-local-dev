@@ -1,0 +1,20 @@
+ta1-api:
+  container_name: api-ta1-service
+  build:
+    context: ${TA1_SERVICE_DIRECTORY}
+    dockerfile: api/Dockerfile
+  ports:
+    - ${TA1_API_PORT:-8020}:${TA1_LISTEN_PORT:-8201}
+  environment:
+    REDIS_HOST: ${REDIS_HOST:-redis}
+    REDIS_PORT: ${REDIS_PORT:-6379}
+    TDS_URL: ${DATA_SERVICE_URL:-http://data-service:8099}
+    SKEMA_RS_URL: ${SKEMA_RS_URL:-http://skema-rs.staging.terarium.ai}
+    TA1_UNIFIED_URL: ${TA1_UNIFIED_URL:-http://skema-unified.staging.terarium.ai}
+    MIT_TR_URL: ${MIT_TR_URL:-http://mit-tr.staging.terarium.ai}
+    LOG_LEVEL: ${TA1_LOG_LEVEL:-INFO}
+  depends_on:
+    redis:
+      condition: service_healthy
+    ta1-rqworker:
+      condition: service_started
